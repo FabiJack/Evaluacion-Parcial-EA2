@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos Geologicos Chile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!--<script src="/js/script_contact.js"></script>-->  
+</head>
+<body class="lead">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Menú</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="/html/index.html">Inicio </a>
+                <a class="nav-item nav-link active" href="/html/sistema_alerta.html">Sistema Alerta <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="contacto.html">Contacto</a>
+            </div>
+        </div>
+    </nav>
+    <br> 
+            
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <form id="form1" name="form1" action="#" class="was-validated">
+                    <fieldset>
+                    <legend>Formulario de contacto</legend>
+                    <div class="form-group">
+                        <label for="nom">Nombre:</label>
+                        <input type="text" class="form-control" id="nom" placeholder="Nombre Apellido" name="nombre" required>
+                        <div class="valid-feedback">Valido.</div>
+                        <div class="invalid-feedback">Por favor complete este campo.</div>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="cor">Correo electronico:</label>
+                        <input type="email" class="form-control" id="cor" placeholder="nombre@correo.cl" name="correo" required>
+                        <div class="valid-feedback">Valido.</div>
+                        <div class="invalid-feedback">Por favor complete este campo.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tel">telefono:</label>
+                        <input type="text" class="form-control" id="tel" placeholder="+569 1234 5678" name="telefono" required>
+                        <div class="valid-feedback">Valido.</div>
+                        <div class="invalid-feedback">Por favor complete este campo.</div>
+                    </div>
+                    </fieldset>
+                </form>
+
+                <form id="form1" name="form1" action="#">
+                    <fieldset>    
+                        <label for="id_region">Seleccione su región:</label>
+                        <select id="id_region" class="form-control">
+                            <option value="0">Seleccione una región...</option>
+                        </select>
+                    <br>
+                        <label for="id_provincia" required>Seleccione su provincia:</label>
+                        <select id="id_provincia" class="form-control">
+                            <option value="0">Seleccione una provincia...</option>
+                        </select>
+                        <br>
+                        <label for="id_comuna">Seleccione su comuna:</label>
+                        <select id="id_comuna" class="form-control" required>
+                            <option value="0">Seleccione una comuna...</option>
+                        </select>
+                    </fieldset>
+                </form>
+
+                <form id="form1" name="form1" action="#" class="was-validated">
+                    </fieldset>
+                        <label for="ms">Mensaje:</label>
+                        <textarea class="form-control" id="ms" style="width:500px; height:100px;" name="mensaje" required></textarea>                            
+                        <div class="valid-feedback">Valido.</div>
+                        <div class="invalid-feedback">Por favor complete este campo.</div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" name="recordar"> Recordarme
+                            </label>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </fieldset>
+                </form>
+                <br>                                          
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $.get("https://apps.gasco.cl/v1/locationService/regions/getAllRegions/",
+            function(data){
+                $.each(data.data, function(i, {id, name, ordinal}){
+                    $("#id_region").append('<option value="'+id+'">'+name+' ('+ordinal+')</option>');
+                })
+            })
+        }) 
+
+        // variables
+
+        var endpoint_region = "https://apps.gasco.cl/v1/locationService/provinces/byRegionId/"
+
+        $('#id_region').change(function() {
+            var selected_region = $('#id_region').val();
+            $.get(endpoint_region+selected_region+"/",
+            function(data){
+                
+                $("#id_provincia").empty().append(new Option("Seleccione una provincia...", 0));
+
+                
+                $("#id_comuna").empty().append(new Option("Seleccione una comuna...", 0));;
+
+                $.each(data.data, function(i, {id, name, regionId}){
+                    $("#id_provincia").append(new Option(name, id));
+                })
+            }) 
+        })
+
+        $('#id_provincia').change(function() {
+            var selected_provincia = $('#id_provincia').val();
+            var endpoint = "https://apps.gasco.cl/v1/locationService/communes/byProvinceId/"+selected_provincia+"/"
+            $.get(endpoint,
+            function(data){
+                $("#id_comuna").empty().append(new Option("Seleccione una comuna...", 0));
+                $.each(data.data, function(i, {id, name}){
+                    $("#id_comuna").append(new Option(name, id));
+                })
+            }) 
+        })
+
+    </script> 
+</body>
+</html>
