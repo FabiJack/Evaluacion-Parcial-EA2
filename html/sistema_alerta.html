@@ -24,15 +24,17 @@
           <a class="nav-item nav-link" href="contacto.html">Contacto</a>
         </div>
       </div>
+      <button onclick="getLocation()" type="button" class="btn btn-dark">Conocer mis coordenadas</button>
     </nav>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <form id="form1" name="form1" action="#">
-                    <fieldset>
+                    <fieldset>                        
                         <legend>Sistema de alerta</legend>    
                         <div class="form-group">
                             <label for="id_alerta">Tipo de alerta:</label>
+                            <p id="demo" style="font-size: 12px; float: right;"></p>
                             <select id="id_alerta" class="form-control">
                                 <option value="0">Seleccione un tipo de alerta...</option>
                                 <option value="ultimos_sismos_chile">Últimos 15 sismos en Chile</option>
@@ -49,13 +51,22 @@
         <div class="row">
             <div class="col-md-12">
                 <table class="table" id="table_ultimos_sismos">
-                    <thead>
+                    <thead id="sismos_header" hidden>
                       <tr>
                         <th scope="col">Referencia</th>
                         <th scope="col">Magnitud</th>
                         <th scope="col">Latitud</th>
                         <th scope="col">Longitud</th>
                         <th scope="col">Hora</th>
+                      </tr>
+                    </thead>
+                    <thead id="onemi_header" hidden>
+                      <tr>
+                        <th scope="col">Ubicacion</th>
+                        <th scope="col">Info</th>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">URL</th>
                       </tr>
                     </thead>
                     <tbody id="tbody_disasters">
@@ -68,37 +79,59 @@
   <script>
     $('#id_alerta').change(function() {
       var alerta_value = $("#id_alerta").val();
+      $('#sismos_header').removeAttr('hidden');
+      $('#onemi_header').removeAttr('hidden');
+      $('#sismos_header').hide();
+      $('#onemi_header').hide();
       $.get(getBasePath(alerta_value),
       function(data) {
         //console.log(data)
         $("#tbody_disasters tr").remove();
         switch (alerta_value) {
           case "tsunami_chile":
+            $('#sismos_header').show();
             $.each(data.tsunami_chile, function(i, {reference, magnitude, latitude, longitude, local_time}){
               $("#tbody_disasters").append(createRowDisaster(reference, magnitude, latitude, longitude, local_time));
             })
           break;
           case "ultimos_sismos_chile":
+            $('#sismos_header').show();
             $.each(data.ultimos_sismos_chile, function(i, {reference, magnitude, latitude, longitude, local_time}){
               $("#tbody_disasters").append(createRowDisaster(reference, magnitude, latitude, longitude, local_time));
             })
           break;
           case "onemi":
-            $.each(data.onemi, function(i, {post_title, alert_date, alert_region, state}){
-              $("#tbody_disasters").append(createRowDisaster2(post_title, alert_date, alert_region, state));
+            $('#onemi_header').show();
+            $.each(data.onemi, function(i, {alert_region, post_title, alert_date, state, url}){
+              var real_url = url.replace("http://www.onemi.cl","")
+              $("#tbody_disasters").append(createRowDisasterUrl(alert_region, post_title, alert_date, state, real_url));
             })
-            //console.log(data)
           break;
           case "ultimos_sismos":
+            $('#sismos_header').show();
             $.each(data.ultimos_sismos, function(i, {reference, magnitude, latitude, longitude, utc_time}){
               $("#tbody_disasters").append(createRowDisaster(reference, magnitude, latitude, longitude, utc_time));
             })
-            //console.log(data)
           break;
         }
       })
     })
   </script>
-
+  <script>
+    const x = document.getElementById("demo");
+    
+    function getLocation() {
+      try {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } catch {
+        x.innerHTML = err;
+      }
+    }
+    
+    function showPosition(position) {
+      x.innerHTML = "Latitude: " + position.coords.latitude + 
+      "<br>Longitude: " + position.coords.longitude;
+    }
+    </script>
 </body>
 </html>
