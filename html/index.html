@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>   
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="/js/script.js"></script>   
 </head>
 <body class="lead">
 
@@ -40,11 +41,11 @@
         <div class="col-3"></div>
 
         <div class="col-3">
-          <div class="card mx-auto" style="width:210px; height: 250px;">
+          <div class="card mx-auto" style="width:250px; height: 300px;">
               <img class="card-img-top mx-auto" src="/images/earthquake-seismometer.png" alt="Card image" style="width: 190px; height: 140px;">
               <div class="card-body">
-                  <h5 class="card-title">Ultimos Sismos</h5>
-                  <p class="card-text" id="lastDisasters">...</p>
+                  <h5 class="card-title">Ultimo Sismo En el Mundo</h5>
+                  <p class="h6" id="ultimos_sismos">...</p>
               </div>
           </div>
         </div>
@@ -52,11 +53,11 @@
         <br>
 
         <div class="col-3">
-          <div class="card mx-auto" style="width:210px; height: 250px;">
+          <div class="card mx-auto" style="width:250px; height: 300px;">
               <img class="card-img-top mx-auto" src="/images/earthquake-seismometer.png" alt="Card image" style="width: 190px; height: 140px;">
               <div class="card-body">
                   <h5 class="card-title">Tsunamis</h5>
-                  <p class="card-text">...</p>                 
+                  <p class="h6" id="Tsunamis">...</p>                 
               </div>
           </div>                    
         </div>
@@ -68,11 +69,11 @@
         <div class="col-3"></div>
 
         <div class="col-3">
-          <div class="card mx-auto" style="width:210px; height: 250px;">
+          <div class="card mx-auto" style="width:250px; height: 300px;">
               <img class="card-img-top mx-auto" src="/images/earthquake-seismometer.png" alt="Card image" style="width: 190px; height: 140px;">
               <div class="card-body">
                   <h5 class="card-title">Onemi</h5>
-                  <p class="card-text">...</p>            
+                  <p class="h6" id="onemi">...</p>            
               </div>
           </div>                    
         </div>
@@ -80,15 +81,14 @@
         <br>
 
         <div class="col-3">
-          <div class="card mx-auto" style="width:210px; height: 250px;">
+          <div class="card mx-auto" style="width: 250px;px; height: 300px;">
               <img class="card-img-top mx-auto" src="/images/earthquake-seismometer.png" alt="Card image" style="width: 190px; height: 140px;">
               <div class="card-body">
-                  <h5 class="card-title">Ultimos 15 Sismos</h5>
-                  <p class="card-text">...</p>
+                  <h5 class="card-title">Ultimo Sismo Chile</h5>
+                  <p class="h6" id="ultimos_sismos_chile">...</p>
               </div>
           </div>
         </div>
-
         <div class="col-3"></div>
 
         <br>
@@ -102,10 +102,40 @@
         </div>
         
         <div class=" col-12 jumbotron text-center mt-3 mb-0">
-          <p>Footer</p>
+          <p>ESTO ES UN PIE DE PAGINA</p>
         </div>
         
       </div>
     </div>
+
+    <script>
+    
+      $.get('https://chilealerta.com/api/query/?user=demo&select=ultimos_sismos&limit=1/',
+      function(data){
+        let element = document.getElementById('ultimos_sismos')
+          element.innerHTML = `<p>${data['ultimos_sismos'][0].reference}</p> <p>${data['ultimos_sismos'][0].magnitude}</p>`;
+      })
+  
+  
+      $.get('https://chilealerta.com/api/query/?user=demo&select=tsunami_chile&limit=1/',
+      function(data){
+        let element = document.getElementById('Tsunamis')
+          element.innerHTML = `<p>${data['tsunami_chile'][0].reference}</p> <p>${data['tsunami_chile'][0].local_time}</p>`;
+      })
+  
+      $.get('https://chilealerta.com/api/query/?user=demo&select=onemi&limit=1',
+      function(data){
+        let element = document.getElementById('onemi')
+          element.innerHTML = `<p>${data['onemi'][0].state}</p> <p>${data['onemi'][0].alert_region}</p>`;
+      })
+  
+      $.get('https://chilealerta.com/api/query/?user=andr3iss&select=ultimos_sismos_chile&limit=1',
+      function(data){
+        let element = document.getElementById('ultimos_sismos_chile')
+          element.innerHTML = `<p>${data['ultimos_sismos_chile'][0].reference}</p> <p>${data['ultimos_sismos_chile'][0].magnitude}</p>`;
+      })
+      
+    </script>
+
 </body>
 </html>
