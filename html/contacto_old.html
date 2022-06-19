@@ -9,8 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <!--<script src="/js/script_contact.js"></script>-->  
 </head>
 <body class="lead">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -31,31 +30,32 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
-
-                <form id="form1" name="form1" action="post">
+                <form id="form1" name="form1" action="#" class="was-validated">
                     <fieldset>
-
                     <legend>Formulario de contacto</legend>
-
                     <div class="form-group">
                         <label for="name">Nombre:</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Nombre Apellido">
+                        <input type="text" class="form-control" id="name" placeholder="Nombre Apellido" name="name" required>
+                        <div class="valid-feedback">Valido.</div>
+                        <div class="invalid-feedback">Por favor complete este campo.</div>
                     </div>
-                    
+    
                     <div class="form-group">
                         <label for="email">Correo electronico:</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="nombre@correo.cl">
+                        <input type="email" class="form-control" id="email" placeholder="nombre@correo.cl" name="email" required>
+                        <div class="valid-feedback">Valido.</div>
+                        <div class="invalid-feedback">Por favor complete este campo.</div>
                     </div>
-
                     <div class="form-group">
                         <label for="phone">telefono:</label>
-                        <input type="text" class="form-control" id="phone" name="phone" placeholder="+569 1234 5678">
+                        <input type="tel" class="form-control" id="phone" placeholder="9 1234 5678" name="phone" required>
+                        <div class="valid-feedback">Valido.</div>
+                        <div class="invalid-feedback">Por favor complete este campo.</div>
                     </div>
-
                     </fieldset>
                 </form>
 
-                <form id="form2" name="form2" action="#">
+                <form id="form1" name="form1" action="#">
                     <fieldset>    
                         <label for="id_region">Seleccione su región:</label>
                         <select id="id_region" class="form-control">
@@ -73,33 +73,27 @@
                         </select>
                     </fieldset>
                 </form>
-                <br>
-                <form id="form1" name="form1" action="post">
+
+                <form id="form1" name="form1" action="#" class="was-validated">
                     </fieldset>
-
-                        <label for="message">Mensaje:</label>
-
-                        <textarea class="form-control" id="message" style="width:500px; height:100px;" name="message"></textarea>                            
-                        <br>
+                        <label for="ms">Mensaje:</label>
+                        <textarea class="form-control" id="ms" style="width:500px; height:100px;" name="mensaje" required></textarea>                            
+                        <div class="valid-feedback">Valido.</div>
+                        <div class="invalid-feedback">Por favor complete este campo.</div>
                         <div class="form-check">
                             <label class="form-check-label">
                                 <input class="form-check-input" type="checkbox" name="recordar"> Recordarme
                             </label>
                         </div>
-
                         <br>
-
                         <button type="submit" class="btn btn-primary" onclick=myFunction()>Enviar</button>
                     </fieldset>
                 </form>
-
-                <br>    
-
+                <br>                                          
             </div>
         </div>
     </div>
 
-    <!--script de ubicacion-->
     <script>
         $(document).ready(function() {
             $.get("https://apps.gasco.cl/v1/locationService/regions/getAllRegions/",
@@ -142,52 +136,6 @@
             }) 
         })
 
-    </script>
-
-    <!--Script de validacion-->
-    <script>
-        $(document).ready(function() {
-            $("#form1").validate({
-                rules: {
-                name : {
-                    required: true,
-                    minlength: 3
-                },
-                email: {
-                    required: true,
-                    email: true
-                },
-                phone: {
-                    required: true,
-                    number: true,
-                    rangelength: [9, 9]
-                },
-                message: {
-                    required: true,
-                    minlength: 10
-                }
-                },
-                messages : {
-                    name: {
-                        required: "Por favor ingrese su nombre",
-                        minlength: "El nombre debe tener al menos 3 caracteres"
-                    },
-                    email: {
-                        required: "Por favor ingrese su correo",
-                        email: "Formatos validos: @gmail.com - @duocuc.cl - @profesor.duoc.cl"
-                    },
-                    phone: {
-                        required: "Por favor ingrese su telefono",
-                        number: "Por favor ingrese numeros",
-                        rangelength: "Por favor ingrese 9 digitos"
-                    },
-                    message: {
-                        required: "Por favor ingrese un mensaje",
-                        minlength: "El mensaje debe contener por lo menos 10 caracteres"
-                    }
-                }
-            });
-        });  
     </script>
     <script>
         function myFunction() {
